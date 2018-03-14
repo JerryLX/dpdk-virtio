@@ -1561,7 +1561,7 @@ static void
 virtio_dev_info_get(struct rte_eth_dev *dev, struct rte_eth_dev_info *dev_info)
 {
 	struct virtio_hw *hw = dev->data->dev_private;
-	struct rte_platform_device platform_dev = RTE_DEV_TO_PLATFORM(dev->device);
+	struct rte_platform_device* platform_dev = RTE_DEV_TO_PLATFORM(dev->device);
 	if (platform_dev)
 		dev_info->driver_name = dev->driver->platform_drv.name;
 	else
