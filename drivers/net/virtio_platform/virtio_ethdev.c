@@ -468,7 +468,7 @@ sz_q = sz_vq + sizeof(*txvq);
 	 * virtual address. And we need properly set _offset_, please see
 	 * VIRTIO_MBUF_DATA_DMA_ADDR in virtqueue.h for more information.
 	 */
-	if (dev->dev)
+	if (dev->device)
 		vq->offset = offsetof(struct rte_mbuf, buf_physaddr);
 	else {
 		vq->vq_ring_mem = (uintptr_t)mz->addr;
@@ -1166,7 +1166,7 @@ eth_virtio_dev_init(struct rte_eth_dev *eth_dev)
 		return -ENOMEM;
 	}
 
-	platform_dev = RTE_DEV_TO_PLATFORM(eth_dev->dev);
+	platform_dev = RTE_DEV_TO_PLATFORM(eth_dev->device);
 	//map resource
 	index = platform_dev->mem_resource[1].phys_addr;
 	snprintf(chrdev,60,"/dev/virtio_cdev%d",index);
@@ -1301,7 +1301,7 @@ eth_virtio_dev_uninit(struct rte_eth_dev *eth_dev)
 	virtio_dev_close(eth_dev);
 
 	//platform_dev = eth_dev->platform_dev;
-	platform_dev = RTE_DEV_TO_PLATFORM(eth_dev->dev);
+	platform_dev = RTE_DEV_TO_PLATFORM(eth_dev->device);
 
 	eth_dev->dev_ops = NULL;
 	eth_dev->tx_pkt_burst = NULL;
@@ -1561,7 +1561,7 @@ static void
 virtio_dev_info_get(struct rte_eth_dev *dev, struct rte_eth_dev_info *dev_info)
 {
 	struct virtio_hw *hw = dev->data->dev_private;
-	struct rte_platform_device platform_dev = RTE_DEV_TO_PLATFORM(eth_dev->dev);
+	struct rte_platform_device platform_dev = RTE_DEV_TO_PLATFORM(eth_dev->device);
 	if (platform_dev)
 		dev_info->driver_name = dev->driver->platform_drv.name;
 	else
