@@ -1,0 +1,47 @@
+hns_get_ethtool_stats
+hns_get_strings
+hns_get_sset_count
+
+
+static const struct net_device_ops hns_nic_netdev_ops = {
+	.ndo_open = hns_nic_net_open,
+	.ndo_stop = hns_nic_net_stop,
+	.ndo_start_xmit = hns_nic_net_xmit,
+	.ndo_tx_timeout = hns_nic_net_timeout,
+	.ndo_set_mac_address = hns_nic_net_set_mac_address,
+	.ndo_change_mtu = hns_nic_change_mtu,
+	.ndo_do_ioctl = hns_nic_do_ioctl,
+	.ndo_set_features = hns_nic_set_features,
+	.ndo_fix_features = hns_nic_fix_features,
+	.ndo_get_stats64 = hns_nic_get_stats64,
+#ifdef CONFIG_NET_POLL_CONTROLLER
+	.ndo_poll_controller = hns_nic_poll_controller,
+#endif
+	.ndo_set_rx_mode = hns_nic_set_rx_mode,
+	.ndo_select_queue = hns_nic_select_queue,
+};
+
+static const struct net_device_ops netdev_ops = {
+    .ndo_open = netdev_open,
+    .ndo_stop = netdev_open, 
+    .ndo_start_xmit = netdev_xmit,
+    .ndo_set_rx_mode = netdev_no_ret,
+    .ndo_validate_addr = netdev_open,
+    .ndo_set_mac_address = NULL,
+    .ndo_change_mtu = NULL,
+    .ndo_tx_timeout = netdev_no_ret,
+    .ndo_vlan_rx_add_vid = NULL,
+    .ndo_vlan_rx_kill_vid = NULL,
+    .ndo_do_ioctl = NULL,
+    .ndo_set_vf_mac = NULL,
+    .ndo_set_vf_vlan = NULL,
+    .ndo_set_vf_rate = NULL,
+    .ndo_set_vf_spoofchk = NULL,
+    .ndo_get_vf_config = NULL,
+    .ndo_get_stats = netdev_stats,
+    .ndo_setup_tc = NULL,
+
+    .ndo_set_features = netdev_set_features,
+    .ndo_fix_features = netdev_fix_features,
+    .ndo_fdb_add = NULL,
+};

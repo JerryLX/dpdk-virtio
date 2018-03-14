@@ -1,0 +1,27 @@
+rte_platform.h：
+rte_platform.c:
+               新增rte_platform_bus结构体
+               一些函数名的修改，加入bus之后的链表获取的对应修改
+
+eal_common_platform.c:
+               加入rte_platform_bus实例
+
+——————————rte_pci_dev_ids.h是什么作用呢？？新版本取消了这个
+               
+rte_ethdev.h:
+        struct rte_eth_dev_info结构体中新增struct_rte_platform_device结构体指针。
+        rte_eth_dev结构体中不再新增struct rte_platform_device结构体指针
+        eth_driver被取消
+
+
+eal_platform.c:
+                     函数名称修改
+                     去掉rte_eal_platform_init(void)(被rte_bus中的函数取代)
+
+新增加rte_ethdev_platform.h文件：
+         移植rte_eth_copy_platform_info函数
+         新增rte_eth_dev_platform_allocate函数，对应rte_eth_dev_pci_allocate
+         新增rte_eth_dev_platform_release函数，对应rte_eth_dev_pci_release
+         新增rte_eth_dev_platform_generic_probe函数，对应rte_eth_dev_pci_generic_probe（进行初始化）
+         新增rte_eth_dev_platform_generic_remove函数，对应rte_eth_dev_pci_generic_remove（进行注销）
+         (原来的eth_dev_init()功能被替代，rte_eth_driver_register()函数功能由于eth_driver结构体的取消不再需要)

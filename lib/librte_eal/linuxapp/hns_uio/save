@@ -1,0 +1,26 @@
+
+    case HNS_UIO_IOCTL_LINK_UPDATE:
+    {
+        //uint32_t *v1;
+        //uint16_t *v2;
+        
+	    //PRINT(KERN_ERR, "in link update");
+        //v1 = (uint32_t *)&uio_para.data[0];
+	    //PRINT(KERN_ERR, "in link update");
+        //v2 = (uint16_t *)&uio_para.data[0];
+        
+	//    PRINT(KERN_ERR, "in link update");
+    //    v1[0] = priv->netdev->phydev->speed;
+	//    PRINT(KERN_ERR, "speed: %u", v1[0]);
+    //    v2[2] = priv->netdev->phydev->duplex;
+	//    PRINT(KERN_ERR, "duplex: %u", v2[2]);
+    //    v2[3] = priv->netdev->phydev->autoneg;
+	//    PRINT(KERN_ERR, "autoneg: %u", v2[3]);
+    //    v2[4] = priv->netdev->phydev->state;
+	//    PRINT(KERN_ERR, "state: %u", v2[4]);
+	//	if (copy_to_user((void __user *)arg, &uio_para,
+	//			 sizeof(struct hns_uio_ioctrl_para)) != 0)
+	//		return UIO_ERROR;
+
+        break;
+    }
