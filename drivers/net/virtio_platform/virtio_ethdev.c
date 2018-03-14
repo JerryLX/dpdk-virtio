@@ -468,7 +468,7 @@ sz_q = sz_vq + sizeof(*txvq);
 	 * virtual address. And we need properly set _offset_, please see
 	 * VIRTIO_MBUF_DATA_DMA_ADDR in virtqueue.h for more information.
 	 */
-	if (dev->platform_dev)
+	if (dev->dev)
 		vq->offset = offsetof(struct rte_mbuf, buf_physaddr);
 	else {
 		vq->vq_ring_mem = (uintptr_t)mz->addr;
@@ -1110,8 +1110,8 @@ virtio_interrupt_handler(void *param)
 	isr = vtplatform_isr(hw);
 	PMD_DRV_LOG(INFO, "interrupt status = %#x", isr);
 
-	if (rte_intr_enable(&dev->platform_dev->intr_handle) < 0)
-		PMD_DRV_LOG(ERR, "interrupt enable failed");
+//	if (rte_intr_enable(&dev->platform_dev->intr_handle) < 0)
+//		PMD_DRV_LOG(ERR, "interrupt enable failed");
 
 	if (isr & VIRTIO_PCI_ISR_CONFIG) {
 		if (virtio_dev_link_update(dev, 0) == 0)
@@ -1166,7 +1166,7 @@ eth_virtio_dev_init(struct rte_eth_dev *eth_dev)
 		return -ENOMEM;
 	}
 
-	platform_dev = eth_dev->platform_dev;
+	platform_dev = RTE_DEV_TO_PLATFORM(eth_dev->dev);
 	//map resource
 	index = platform_dev->mem_resource[1].phys_addr;
 	snprintf(chrdev,60,"/dev/virtio_cdev%d",index);
@@ -1300,7 +1300,8 @@ eth_virtio_dev_uninit(struct rte_eth_dev *eth_dev)
 	/* Close it anyway since there's no way to know if closed */
 	virtio_dev_close(eth_dev);
 
-	platform_dev = eth_dev->platform_dev;
+	//platform_dev = eth_dev->platform_dev;
+	platform_dev = RTE_DEV_TO_PLATFORM(eth_dev->dev);
 
 	eth_dev->dev_ops = NULL;
 	eth_dev->tx_pkt_burst = NULL;
@@ -1400,17 +1401,17 @@ virtio_dev_start(struct rte_eth_dev *dev)
 	struct virtnet_tx *txvq __rte_unused;
 
 	/* check if lsc interrupt feature is enabled */
-	if (dev->data->dev_conf.intr_conf.lsc) {
-		if (!(dev->data->dev_flags & RTE_ETH_DEV_INTR_LSC)) {
-			PMD_DRV_LOG(ERR, "link status not supported by host");
-			return -ENOTSUP;
-		}
-
-		if (rte_intr_enable(&dev->platform_dev->intr_handle) < 0) {
-			PMD_DRV_LOG(ERR, "interrupt enable failed");
-			return -EIO;
-		}
-	}
+//	if (dev->data->dev_conf.intr_conf.lsc) {
+//		if (!(dev->data->dev_flags & RTE_ETH_DEV_INTR_LSC)) {
+//			PMD_DRV_LOG(ERR, "link status not supported by host");
+//			return -ENOTSUP;
+//		}
+//
+//		if (rte_intr_enable(&dev->platform_dev->intr_handle) < 0) {
+//			PMD_DRV_LOG(ERR, "interrupt enable failed");
+//			return -EIO;
+//		}
+//	}
 
 	/* Initialize Link state */
 	virtio_dev_link_update(dev, 0);
@@ -1515,8 +1516,8 @@ virtio_dev_stop(struct rte_eth_dev *dev)
 
 	hw->started = 0;
 
-	if (dev->data->dev_conf.intr_conf.lsc)
-		rte_intr_disable(&dev->platform_dev->intr_handle);
+//	if (dev->data->dev_conf.intr_conf.lsc)
+//		rte_intr_disable(&dev->platform_dev->intr_handle);
 
 	memset(&link, 0, sizeof(link));
 	virtio_dev_atomic_write_link_status(dev, &link);
@@ -1560,8 +1561,8 @@ static void
 virtio_dev_info_get(struct rte_eth_dev *dev, struct rte_eth_dev_info *dev_info)
 {
 	struct virtio_hw *hw = dev->data->dev_private;
-
-	if (dev->platform_dev)
+	struct rte_platform_device platform_dev = RTE_DEV_TO_PLATFORM(eth_dev->dev);
+	if (platform_dev)
 		dev_info->driver_name = dev->driver->platform_drv.name;
 	else
 		dev_info->driver_name = "virtio_user PMD";
@@ -1609,16 +1610,30 @@ static int eth_virtio_platform_remove(struct rte_platform_device *platform_dev)
  * virtual function driver struct
  */
 static struct rte_platform_driver rte_virtio_hns_pmd = {
-	.id_table = platform_id_virtio_map,
+	.driver = {
+        .name = "net_virtio_platform",
+    },
+    .id_table = platform_id_virtio_map,
 	.drv_flags =  RTE_PLATFORM_DRV_INTR_LSC,
 	.probe = eth_virtio_platform_probe,
 	.remove = eth_virtio_platform_remove,
 };
+RTE_INIT(rte_virtio_pmd_init);
+static void
+rte_virtio_pmd_init(void)
+{
+    if (rte_eal_iopl_init() != 0) {
+        PMD_INIT_LOG(ERR, "IOPL call failed - cannot use virtio PMD");
+        return;
+    }
+
+    rte_pci_register(&rte_virtio_pmd);
+}
 
 
 
 
-RTE_PMD_REGISTER_PLATFORM(net_hns, rte_virtio_hns_pmd);
-
+//RTE_PMD_REGISTER_PLATFORM(net_hns, rte_virtio_hns_pmd);
+RTE_PMD_EXPORT_NAME(net_virtio_platform, __COUNTER__);
 
 //DRIVER_REGISTER_PCI_TABLE(virtio_net, platform_id_virtio_map);
