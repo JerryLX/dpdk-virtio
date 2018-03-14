@@ -1561,11 +1561,11 @@ static void
 virtio_dev_info_get(struct rte_eth_dev *dev, struct rte_eth_dev_info *dev_info)
 {
 	struct virtio_hw *hw = dev->data->dev_private;
-	struct rte_platform_device* platform_dev = RTE_DEV_TO_PLATFORM(dev->device);
-	if (platform_dev)
-		dev_info->driver_name = dev->driver->platform_drv.name;
-	else
-		dev_info->driver_name = "virtio_user PMD";
+	//struct rte_platform_device* platform_dev = RTE_DEV_TO_PLATFORM(dev->device);
+	//if (platform_dev)
+	//	dev_info->driver_name = dev->driver->platform_drv.name;
+	//else
+	dev_info->driver_name = "virtio_user PMD";
 	dev_info->max_rx_queues = (uint16_t)hw->max_rx_queues;
 	dev_info->max_tx_queues = (uint16_t)hw->max_tx_queues;
 	dev_info->min_rx_bufsize = VIRTIO_MIN_RX_BUFSIZE;
