@@ -1561,7 +1561,7 @@ static void
 virtio_dev_info_get(struct rte_eth_dev *dev, struct rte_eth_dev_info *dev_info)
 {
 	struct virtio_hw *hw = dev->data->dev_private;
-	struct rte_platform_device platform_dev = RTE_DEV_TO_PLATFORM(eth_dev->device);
+	struct rte_platform_device platform_dev = RTE_DEV_TO_PLATFORM(dev->device);
 	if (platform_dev)
 		dev_info->driver_name = dev->driver->platform_drv.name;
 	else
@@ -1626,8 +1626,7 @@ rte_virtio_pmd_init(void)
         PMD_INIT_LOG(ERR, "IOPL call failed - cannot use virtio PMD");
         return;
     }
-
-    rte_pci_register(&rte_virtio_pmd);
+    rte_platform_register(&rte_virtio_hns_pmd);
 }
 
 
