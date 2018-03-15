@@ -687,7 +687,7 @@ virtio_recv_pkts(void *rx_queue, struct rte_mbuf **rx_pkts, uint16_t nb_pkts)
 		if (hw->vlan_strip)
 			rte_vlan_strip(rxm);
 
-		VIRTIO_DUMP_PACKET(rxm, rxm->data_len);
+		//VIRTIO_DUMP_PACKET(rxm, rxm->data_len);  mqc
 
 		rx_pkts[nb_rx++] = rxm;
 

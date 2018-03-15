@@ -1,1 +1,1 @@
-/root/dpdk-part2@guest/lib/librte_eal/linuxapp/plf_uio/Makefile
+/root/dpdk-virtio/lib/librte_eal/linuxapp/plf_uio/Makefile
