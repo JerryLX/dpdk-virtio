@@ -1,6 +1,7 @@
 #   BSD LICENSE
 #
-#   Copyright (C) Cavium networks 2015. All rights reserved.
+#   Copyright(c) 2010-2014 Intel Corporation. All rights reserved.
+#   All rights reserved.
 #
 #   Redistribution and use in source and binary forms, with or without
 #   modification, are permitted provided that the following conditions
@@ -12,7 +13,7 @@
 #       notice, this list of conditions and the following disclaimer in
 #       the documentation and/or other materials provided with the
 #       distribution.
-#     * Neither the name of Cavium networks nor the names of its
+#     * Neither the name of Intel Corporation nor the names of its
 #       contributors may be used to endorse or promote products derived
 #       from this software without specific prior written permission.
 #
@@ -27,33 +28,32 @@
 #   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 #   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 #   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
 
-#include "common_linuxapp"
+ifeq ($(RTE_SDK),)
+$(error "Please define RTE_SDK environment variable")
+endif
 
-CONFIG_RTE_MACHINE="armv8a"
+# Default target, can be overriden by command line or environment
+RTE_TARGET ?= x86_64-native-linuxapp-gcc
 
-CONFIG_RTE_ARCH="arm64"
-CONFIG_RTE_ARCH_ARM64=y
-CONFIG_RTE_ARCH_64=y
+include $(RTE_SDK)/mk/rte.vars.mk
 
-CONFIG_RTE_FORCE_INTRINSICS=y
+ifneq ($(CONFIG_RTE_EXEC_ENV),"linuxapp")
+$(info This application can only operate in a linuxapp environment, \
+please change the definition of the RTE_TARGET environment variable)
+all:
+else
 
-CONFIG_RTE_TOOLCHAIN="gcc"
-CONFIG_RTE_TOOLCHAIN_GCC=y
+# binary name
+APP = vhost-switch
 
-CONFIG_RTE_EAL_IGB_UIO=n
-CONFIG_RTE_EAL_HNS_UIO=n
-CONFIG_RTE_EAL_HNS_VIRTIO_UIO=y
-CONFIG_RTE_KNI_KMOD=n
+# all source are stored in SRCS-y
+SRCS-y := main.c virtio_net.c
 
-CONFIG_RTE_LIBRTE_IVSHMEM=n
-CONFIG_RTE_LIBRTE_FM10K_PMD=n
-CONFIG_RTE_LIBRTE_I40E_PMD=n
-CONFIG_RTE_LIBRTE_VIRTIO_PLATFORM_PMD=y
+CFLAGS += -O2 -D_FILE_OFFSET_BITS=64
+CFLAGS += $(WERROR_FLAGS)
+CFLAGS += -D_GNU_SOURCE
 
-CONFIG_RTE_SCHED_VECTOR=n
-CONFIG_RTE_LIBRTE_PMD_HNS=y
-CONFIG_RTE_LIBRTE_VIRTIO_PMD=n #c
-CONFIG_RTE_LIBRTE_VIRTIO_PLATFORM_PMD=n #c
-CONFIG_RTE_VIRTIO_USER=y
+include $(RTE_SDK)/mk/rte.extapp.mk
+
+endif

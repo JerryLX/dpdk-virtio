@@ -45,8 +45,8 @@ CONFIG_RTE_TOOLCHAIN_GCC=y
 # Maximum available cache line size in arm64 implementations.
 # Setting to maximum available cache line size in generic config
 # to address minimum DMA alignment across all arm64 implementations.
-CONFIG_RTE_EAL_HNS_UIO=n
-CONFIG_RTE_EAL_HNS_VIRTIO_UIO=y
+CONFIG_RTE_EAL_HNS_UIO=y
+CONFIG_RTE_EAL_HNS_VIRTIO_UIO=n
 CONFIG_RTE_KNI_VHOST=n
 CONFIG_RTE_KNI_KO_DEBUG=n
 CONFIG_RTE_KNI_VHOST_DEBUG_RX=n
