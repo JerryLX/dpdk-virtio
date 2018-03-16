@@ -522,6 +522,6 @@ struct rte_pci_bus rte_pci_bus = {
 	.driver_list = TAILQ_HEAD_INITIALIZER(rte_pci_bus.driver_list),
 };
 
-#if (VIRTIO == 0)
+#ifndef RTE_EAL_HNS_VIRTIO_UIO
 RTE_REGISTER_BUS(PCI_BUS_NAME, rte_pci_bus.bus);
 #endif

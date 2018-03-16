@@ -95,7 +95,7 @@
 /* mask of enabled ports */
 static uint32_t enabled_port_mask = 0;
 
-//const uint16_t lcoreid[4] = {1, 2, 3, 4};
+const uint16_t lcoreid[4] = {1, 8, 4, 12};
 
 /* Promiscuous mode */
 static uint32_t promiscuous;
@@ -1273,8 +1273,8 @@ destroy_device(int vid)
 static int
 new_device(int vid)
 {
-	int lcore, core_add = 0;
-	uint32_t device_num_min = num_devices;
+//	int lcore, core_add = 0;
+//	uint32_t device_num_min = num_devices;
 	struct vhost_dev *vdev;
 
 	vdev = rte_zmalloc("vhost device", sizeof(*vdev), RTE_CACHE_LINE_SIZE);
@@ -1299,14 +1299,14 @@ new_device(int vid)
 	vdev->remove = 0;
 
 	/* Find a suitable lcore to add the device. */
-	RTE_LCORE_FOREACH_SLAVE(lcore) {
-		if (lcore_info[lcore].device_num < device_num_min) {
-			device_num_min = lcore_info[lcore].device_num;
-			core_add = lcore;
-		}
-	}
-	vdev->coreid = core_add;
-	//vdev->coreid = lcoreid[vid];
+//	RTE_LCORE_FOREACH_SLAVE(lcore) {
+//		if (lcore_info[lcore].device_num < device_num_min) {
+//			device_num_min = lcore_info[lcore].device_num;
+//			core_add = lcore;
+//		}
+//	}
+//	vdev->coreid = core_add;
+	vdev->coreid = lcoreid[vid];
 
 	TAILQ_INSERT_TAIL(&lcore_info[vdev->coreid].vdev_list, vdev,
 			  lcore_vdev_entry);

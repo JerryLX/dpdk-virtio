@@ -1,1 +1,0 @@
-/root/dpdk-virtio/lib/librte_eal/linuxapp/plf_uio/Makefile

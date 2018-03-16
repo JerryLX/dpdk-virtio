@@ -28,3 +28,4 @@ _postinstall
 _preinstall
 _postbuild
 arm64-armv8a-linuxapp-gcc/*
+arm64-virtio-linuxapp-gcc/*
